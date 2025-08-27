@@ -49,7 +49,7 @@ const MovieLanding = () => {
         <button className="bg-gray-800 text-white px-3 py-1 rounded-full">Other</button>
         <span className="text-yellow-500 mt-1">›</span>
       </div> 
-      <ul className="grid grid-cols-4 m-2 bg-black">
+      <ul className="grid grid-cols-6 m-2 bg-black">
         {movies.map((movie) => (
           <li key={movie.id}>
             {movie.poster_path && (
