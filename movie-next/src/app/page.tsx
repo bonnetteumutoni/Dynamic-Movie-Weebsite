@@ -140,14 +140,6 @@ const HomePage = () => {
               {genre}
             </button>
           ))}
-
-          <input
-            type="text"
-            placeholder="Search movies or series"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="p-2 rounded-md text-black flex-grow max-w-xs"
-          />
         </div>
 
         <div className="relative z-10 max-w-60xl mx-auto p-4 bg-black">
