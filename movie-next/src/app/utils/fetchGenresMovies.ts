@@ -1,5 +1,6 @@
-const API_KEY = "781992d0004e7198c48a91d53f50e946"; 
-const BASE_URL = "https://api.themoviedb.org/3";
+// Use NEXT_PUBLIC_ for client-side access in Next.js
+const apiKey = process.env.NEXT_PUBLIC_API_KEY || '';
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://api.themoviedb.org/3';
 
 interface Genre {
   id: number;
@@ -24,34 +25,65 @@ interface MovieWithGenres extends RawMovie {
 }
 
 export const fetchGenres = async (): Promise<Genre[]> => {
-  const response = await fetch(`${BASE_URL}/genre/movie/list?api_key=${API_KEY}`);
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch genres: ${response.status} ${response.statusText}`);
+  if (!apiKey) {
+    return []; 
   }
 
-  const data = await response.json();
-  return data.genres;
+  try {
+    const response = await fetch(`${baseUrl}/genre/movie/list?api_key=${apiKey}&language=en-US`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      return []; 
+    }
+
+    const data = await response.json();
+    if (!data.genres || !Array.isArray(data.genres)) {
+      return []; 
+    }
+
+    return data.genres;
+  } catch (error) {
+    return []; 
+  }
 };
 
 export const fetchMoviesWithGenres = async (): Promise<{ results: MovieWithGenres[] }> => {
-  const genres = await fetchGenres();
+  try {
+    const genres = await fetchGenres();
+    if (!apiKey) {
+      return { results: [] }; 
+    }
 
-  const response = await fetch(`${BASE_URL}/movie/popular?api_key=${API_KEY}`);
+    const response = await fetch(`${baseUrl}/movie/popular?api_key=${apiKey}&language=en-US`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+      },
+    });
 
-  if (!response.ok) {
-    throw new Error(`Failed to fetch movies: ${response.status} ${response.statusText}`);
+    if (!response.ok) {
+      return { results: [] }; 
+    }
+
+    const data = await response.json();
+    if (!data.results || !Array.isArray(data.results)) {
+      return { results: [] }; 
+    }
+
+    const moviesWithGenreNames = data.results.map((movie: RawMovie) => ({
+      ...movie,
+      genre_names: movie.genre_ids.map(
+        (id) => genres.find((g) => g.id === id)?.name || 'Other'
+      ),
+    }));
+
+    return { results: moviesWithGenreNames };
+  } catch (error) {
+    return { results: [] }; 
   }
-
-  const data = await response.json();
-
-
-  const moviesWithGenreNames = data.results.map((movie: RawMovie) => ({
-    ...movie,
-    genre_names: movie.genre_ids.map(
-      (id) => genres.find((g) => g.id === id)?.name || "Other"
-    ),
-  }));
-
-  return { results: moviesWithGenreNames };
 };
