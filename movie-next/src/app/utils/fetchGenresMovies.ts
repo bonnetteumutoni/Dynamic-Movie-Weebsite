@@ -1,4 +1,4 @@
-// Use NEXT_PUBLIC_ for client-side access in Next.js
+
 const apiKey = process.env.NEXT_PUBLIC_API_KEY || '';
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://api.themoviedb.org/3';
 
