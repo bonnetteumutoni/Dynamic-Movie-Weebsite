@@ -31,8 +31,9 @@ const MovieLanding = () => {
 
   const movie = movies[currentIndex];
 
-  const handleAddToFavorites = (movieId: number) => {
-    alert(`Added movie with id ${movieId} to favorites (implement your logic)`);
+
+  const handleAddToFavorites = () => {
+    alert('Added to favorites');
   };
 
   return (
@@ -55,7 +56,7 @@ const MovieLanding = () => {
           />
         </AnimatePresence>
 
-        <div className="absolute bottom-10 left-0 p-4  bg-opacity-70 w-full max-w-4xl text-white">
+        <div className="absolute bottom-10 left-0 p-4 bg-opacity-70 w-full max-w-4xl text-white">
           <h2 className="text-4xl font-bold text-yellow-500 mb-1">{movie.title}</h2>
           <div className="flex items-center text-gray-400 text-sm mb-2 space-x-2">
             <span>{movie.vote_average.toFixed(1)}</span>
@@ -120,7 +121,7 @@ const MovieLanding = () => {
 
               <button
                 className="absolute top-2 right-2 bg-yellow-500 text-black px-2 py-1 rounded text-xs font-semibold hover:bg-yellow-600 transition"
-                onClick={() => handleAddToFavorites(m.id)}
+                onClick={handleAddToFavorites}
               >
                 Add To Favorites
               </button>
