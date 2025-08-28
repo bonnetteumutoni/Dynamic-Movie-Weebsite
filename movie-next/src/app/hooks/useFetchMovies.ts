@@ -1,41 +1,30 @@
-"use client";
+"use client"
 import { useEffect, useState } from "react";
-import { fetchMoviesWithGenres } from "../utils/fetchGenresMovies";
-
+import { fetchMovies } from "../utils/fetchMovies";
 interface MovieType {
   id: number;
   title: string;
   poster_path: string;
-  genre_ids: number[];
-  genre_names?: string[];
-  backdrop_path?: string;
+  release_date: string;
   vote_average: number;
-  runtime?: number;
-  release_date?: string;
-  overview?: string;
-  number_of_episodes?: number;
+  backdrop_path?: string; 
 }
-
 const useFetchMovies = () => {
-  const [movies, setMovies] = useState<MovieType[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [movies, setMovies] = useState<Array<MovieType>>([]);
+  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-
   useEffect(() => {
-    const fetchData = async () => {
+    (async () => {
       try {
-        const data = await fetchMoviesWithGenres();
-        setMovies(data.results);
-      } catch (e) {
-        setError((e as Error).message);
+        const movies = await fetchMovies();
+        setMovies(movies?.results || []);
+      } catch (error) {
+        setError((error as Error).message);
       } finally {
         setLoading(false);
       }
-    };
-    fetchData();
+    })();
   }, []);
-
   return { movies, loading, error };
 };
-
 export default useFetchMovies;

@@ -1,4 +1,4 @@
-const baseUrl ='/api/AllMovies';
+const baseUrl ='/api/movies';
 export async function fetchMovies() {
   try {
     const response = await fetch(baseUrl);
